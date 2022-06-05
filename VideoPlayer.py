@@ -19,6 +19,7 @@ class VideoPlayer:
 
     def __init__(self) -> None:
         os.environ.__setitem__('DISPLAY', ':0.0')
+        os.system('xset r off')
         self.__display = tk.Tk()
         self.__display.attributes("-fullscreen", True)
         self.__display.update()
@@ -33,6 +34,15 @@ class VideoPlayer:
 
         self.playing = False
         self.pausing = False
+
+    def mainloop(self) -> None:
+        self.__display.mainloop()
+
+    def update(self) -> None:
+        self.__display.update()
+
+    def destroy(self) -> None:
+        self.__display.destroy()
 
     def set_callback_end(self, function):
         self.__cb_function = function
@@ -99,3 +109,6 @@ class VideoPlayer:
     def __cb_finished(self) -> bool:
         self.playing = False
         self.pausing = False
+
+    def bind_press_event(self, f) -> None:
+        self.__display.bind("<KeyPress>", f)

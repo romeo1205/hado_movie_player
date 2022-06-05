@@ -1,41 +1,23 @@
-import json
+import tkinter as tk
 import os
-import RPi.GPIO as GPIO
+import sys
+from concurrent.futures import ThreadPoolExecutor
 
 
 os.environ.__setitem__('DISPLAY', ':0.0')
 
-
-PIN_INPUT = 12
-PIN_PAUSE = 6
-
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(PIN_INPUT, GPIO.IN)
-GPIO.setup(PIN_PAUSE, GPIO.IN)
+__display = tk.Tk()
 
 
-json_open = open('MovieList.json', 'r')
-json_data = json.load(json_open)
-movies_num = len(json_data["movies"])
+def keyboard_event(event):
+    key = event.keysym
+    if key == "Escape":
+        sys.exit()
 
 
-cnt = 0
-
-ENTRY_PATH_ID = json_data["entry"]
-ENTRY_PATH = json_data["movies"][ENTRY_PATH_ID]["path"]
-ENTRY_PATH_NEXT = json_data["movies"][ENTRY_PATH_ID]["next"]
-ENTRY_PATH_PREVIOUS = json_data["movies"][ENTRY_PATH_ID]["previous"]
+with ThreadPoolExecutor(2) as e:
+    vp.bind_press_event(keyboard_event)
 
 
-path = ""
-path_next = ""
-path_previous = ""
-
-
-try:
-    while True:
-        print(cnt)
-
-except(KeyboardInterrupt, SystemExit, SystemError):
-    print('exit')
-    GPIO.cleanup()
+__display.bind("<KeyPress>", keyboard_event)
+__display.mainloop()
